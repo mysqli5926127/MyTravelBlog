@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyTravelBlog</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* Global */
+body, html { margin:0; padding:0; font-family:'Roboto', sans-serif; scroll-behavior:smooth; }
+a { text-decoration:none; color:inherit; cursor:pointer; }
+img { max-width:100%; display:block; }
+
+/* Header */
+header {
+  position: fixed;
+  top:0;
+  left:0;
+  width:100%;
+  background:#222;
+  color:#fff;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:10px 5%;
+  z-index:10000;
+  box-shadow:0 2px 5px rgba(0,0,0,0.2);
+  box-sizing:border-box;
+}
+header .logo { font-size:1.5rem; font-weight:bold; }
+
+/* Desktop Menu */
+nav.desktop-menu { display:flex; flex:1; justify-content:flex-end; }
+nav.desktop-menu ul { display:flex; gap:20px; list-style:none; margin:0; padding:0; }
+nav.desktop-menu ul li a { color:#fff; padding:8px 12px; border-radius:5px; transition:0.3s; white-space:nowrap; }
+nav.desktop-menu ul li a:hover { background:#ff6600; color:white; }
+
+/* Hamburger */
+.hamburger { display:none; flex-direction:column; cursor:pointer; gap:4px; z-index:10001; }
+.hamburger div { width:25px; height:3px; background:#fff; transition:0.3s; }
+
+/* Mobile Menu */
+nav.mobile-menu {
+  position: fixed;
+  top:0;
+  left:-250px;
+  width:250px;
+  height:100%;
+  background:#222;
+  padding-top:60px;
+  transition:0.3s;
+  z-index:9999;
+}
+nav.mobile-menu.active { left:0; }
+nav.mobile-menu ul { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; }
+nav.mobile-menu ul li { margin-bottom:20px; text-align:center; }
+nav.mobile-menu ul li a { color:white; font-size:1.2rem; padding:10px 20px; display:block; border-radius:5px; transition:0.3s; }
+nav.mobile-menu ul li a:hover { background:#ff6600; }
+
+/* Hamburger animation */
+.hamburger.open div:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
+.hamburger.open div:nth-child(2) { opacity:0; }
+.hamburger.open div:nth-child(3) { transform: rotate(-45deg) translate(6px,-6px); }
+
+/* Hero */
+.hero { position: relative; height:70vh; display:flex; justify-content:center; align-items:center; overflow:hidden; margin-top:0; }
+.hero img { width:100%; height:100%; object-fit:cover; }
+.hero .overlay-text {
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+  color:white;
+  background:rgba(0,0,0,0.5);
+  padding:20px;
+  border-radius:10px;
+  text-align:center;
+  width:90%;
+  max-width:400px;
+}
+.hero .overlay-text h1 { font-size:2rem; margin:0 0 10px; }
+.hero .overlay-text p { font-size:1rem; margin-bottom:15px; }
+.hero .overlay-text a { background:#ff6600; color:white; padding:8px 20px; border-radius:5px; display:inline-block; transition:0.3s; }
+.hero .overlay-text a:hover { background:#e65c00; }
+
+/* Main */
+main { display:flex; flex-wrap:wrap; padding:50px 20px; gap:20px; background:#f8f8f8; }
+.blog-posts { flex:3; display:flex; flex-direction:column; gap:20px; }
+.blog-post { background:#fff; border-radius:10px; overflow:hidden; box-shadow:0 5px 15px rgba(0,0,0,0.1); transition:transform 0.3s; }
+.blog-post:hover { transform:translateY(-5px); }
+.blog-post img { width:100%; height:200px; object-fit:cover; }
+.blog-post .content { padding:15px; }
+.blog-post .content h2 { margin:0 0 10px; color:#222; font-size:1.2rem; }
+.blog-post .content p { margin:0 0 10px; color:#555; font-size:0.9rem; }
+.blog-post .content a { color:#ff6600; font-weight:bold; display:inline-block; margin-top:5px; }
+.readmore-content { display:none; margin-top:10px; color:#444; font-size:0.9rem; line-height:1.4; }
+
+/* Sidebar */
+.sidebar { flex:1; display:flex; flex-direction:column; gap:20px; }
+.sidebar .widget { background:#fff; padding:15px; border-radius:10px; box-shadow:0 5px 15px rgba(0,0,0,0.05); }
+.sidebar .widget h3 { margin-top:0; font-size:1rem; color:#222; }
+.sidebar .widget ul { list-style:none; padding:0; margin:0; }
+.sidebar .widget ul li { margin-bottom:8px; }
+.sidebar .widget ul li a { color:#555; font-size:0.9rem; transition:0.3s; }
+.sidebar .widget ul li a:hover { color:#ff6600; }
+
+/* Footer */
+footer { background:#222; color:#fff; padding:30px 20px; }
+footer .footer-widgets { display:flex; flex-wrap:wrap; gap:20px; justify-content:space-between; }
+footer .footer-widgets div { flex:1; min-width:200px; }
+footer a { color:#ff6600; }
+footer .copyright { text-align:center; margin-top:15px; font-size:0.8rem; color:#ccc; }
+
+/* Responsive */
+@media(max-width:768px){
+  nav.desktop-menu { display:none; }
+  .hamburger { display:flex; }
+  .hero { height:60vh; }
+  .hero .overlay-text h1 { font-size:1.5rem; }
+  .hero .overlay-text p { font-size:0.9rem; }
+  main { flex-direction:column; padding:20px 10px; }
+  .blog-posts { flex:1; }
+  .sidebar { flex:1; }
+}
+@media(max-width:360px){
+  .hero .overlay-text { width:95%; padding:15px; }
+  .hero .overlay-text h1 { font-size:1.3rem; }
+  .hero .overlay-text p { font-size:0.8rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header>
+  <div class="logo">MyTravelBlog</div>
+  <nav class="desktop-menu">
+    <ul>
+      <li><a href="#hero">Home</a></li>
+      <li><a href="#blog">Blog</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+  <div class="hamburger" onclick="toggleMenu(this)"><div></div><div></div><div></div></div>
+</header>
+
+<!-- Mobile Menu -->
+<nav class="mobile-menu" id="mobileMenu">
+  <ul>
+    <li><a href="#hero" onclick="closeMenu()">Home</a></li>
+    <li><a href="#blog" onclick="closeMenu()">Blog</a></li>
+    <li><a href="#about" onclick="closeMenu()">About</a></li>
+    <li><a href="#contact" onclick="closeMenu()">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<section class="hero" id="hero">
+  <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e" alt="Travel Banner">
+  <div class="overlay-text">
+    <h1>Explore the World with Us</h1>
+    <p>Discover amazing travel stories and tips</p>
+    <a href="#blog">Read More</a>
+  </div>
+</section>
+
+<!-- Main -->
+<main>
+  <section class="blog-posts" id="blog">
+    <!-- Post 1 -->
+    <article class="blog-post">
+      <img src="https://images.unsplash.com/photo-1526772662000-3f88f10405ff" alt="Beach">
+      <div class="content">
+        <h2>Top 10 Beaches to Visit</h2>
+        <p>Discover the most breathtaking beaches around the world for your next getaway.</p>
+        <a onclick="toggleReadMore(this)">Read More</a>
+        <div class="readmore-content">
+          <p><strong>AI-generated Tip:</strong> Plan visits during shoulder seasons to avoid crowds, enjoy sunrise walks, and explore nearby local eateries. Always bring snorkeling gear for hidden underwater gems.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- Post 2 -->
+    <article class="blog-post">
+      <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb" alt="Mountain">
+      <div class="content">
+        <h2>Hiking Adventures You Can't Miss</h2>
+        <p>Explore mountains, trails, and unforgettable hikes around the globe.</p>
+        <a onclick="toggleReadMore(this)">Read More</a>
+        <div class="readmore-content">
+          <p><strong>AI-generated Tip:</strong> Pack light but essentials: water, first-aid, and layered clothing. Choose trails matching your fitness level, and always leave no trace to protect nature.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- Post 3 -->
+    <article class="blog-post">
+      <img src="https://images.unsplash.com/photo-1549887531-0e87e5b22a92" alt="City Travel">
+      <div class="content">
+        <h2>City Travel: Hidden Gems</h2>
+        <p>Explore unique spots and hidden gems in the world’s most vibrant cities.</p>
+        <a onclick="toggleReadMore(this)">Read More</a>
+        <div class="readmore-content">
+          <p><strong>AI-generated Tip:</strong> Wander beyond tourist areas, visit local markets, try street foods, and use public transportation for authentic city experiences. Capture photos of street art and architecture.</p>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="widget">
+      <h3>Search</h3>
+      <input type="text" placeholder="Search..." style="width:100%; padding:8px; border-radius:5px; border:1px solid #ccc;">
+    </div>
+    <div class="widget">
+      <h3>Categories</h3>
+      <ul>
+        <li><a href="#">Beaches</a></li>
+        <li><a href="#">Mountains</a></li>
+        <li><a href="#">City Travel</a></li>
+        <li><a href="#">Adventure</a></li>
+      </ul>
+    </div>
+    <div class="widget">
+      <h3>Recent Posts</h3>
+      <ul>
+        <li><a href="#">Top 10 Beaches to Visit</a></li>
+        <li><a href="#">Hiking Adventures You Can't Miss</a></li>
+        <li><a href="#">City Travel: Hidden Gems</a></li>
+      </ul>
+    </div>
+  </aside>
+</main>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-widgets">
+    <div>
+      <h3>About</h3>
+      <p>Sharing travel stories, tips, and adventures from around the world.</p>
+    </div>
+    <div>
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="#hero">Home</a></li>
+        <li><a href="#blog">Blog</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Follow Us</h3>
+      <p>[Social Media Icons Here]</p>
+    </div>
+  </div>
+  <div class="copyright">
+    © 2026 MyTravelBlog. All rights reserved.
+  </div>
+</footer>
+
+<script>
+function toggleMenu(hamburger){
+  const menu=document.getElementById('mobileMenu');
+  menu.classList.toggle('active');
+  hamburger.classList.toggle('open');
+}
+function closeMenu(){
+  document.getElementById('mobileMenu').classList.remove('active');
+  document.querySelector('.hamburger').classList.remove('open');
+}
+function toggleReadMore(button){
+  const content = button.nextElementSibling;
+  if(content.style.display === "none" || content.style.display === ""){
+    content.style.display = "block";
+    button.textContent = "Read Less";
+  } else {
+    content.style.display = "none";
+    button.textContent = "Read More";
+  }
+}
+</script>
+</body>
+</html>
